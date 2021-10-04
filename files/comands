@@ -1,0 +1,38 @@
+####### Kubernetes cluster
+export KUBECONFIG=files/config
+export PULUMI_CONFIG_PASSPHRASE="localstack"
+kind create cluster --config files/kind.yaml
+kubectl cluster-info --context kind-pulumi-demo
+
+####### Pulumi Kubernetes
+# GitHub source code: https://github.com/pulumi
+# List of providers: https://www.pulumi.com/docs/intro/cloud-providers/#cloud-providers-1
+# Deploy app to k8s: https://www.pulumi.com/docs/guides/crosswalk/kubernetes/apps/#deploy-kubernetes-apps
+
+pulumi new # Create template for your project (chose provider)
+OR
+pulumi new kubernetes-typescript --force # Run directly for kubernetes setup
+# NOTE: you can run above command with --force too in case it's not empty dir
+
+pulumi stack ls
+
+pulumi config set demo-pulumi:armadaVersion  "v0.1.43" --secret
+
+kubectl config get-contexts 
+kubectl config get-clusters 
+kubectl cluster-info
+
+pulumi up  # Deploy default nginx values
+
+# Deploy Armada Helm
+# https://www.pulumi.com/docs/reference/pkg/kubernetes/helm/v3/release/#create
+
+pulumi up # Deploy Armada chart
+
+# Add Docker code
+pulumi up # Deploy docker image
+
+# Delete
+pulumi stack rm dev -f
+kind delete cluster --name=pulumi-demo
+rm -rf *.yaml *.json *.ts node_modules 

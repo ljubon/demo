@@ -1,0 +1,14 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: pulumi-demo
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 8001
+  - containerPort: 8080
+    hostPort: 8081
+  extraMounts:
+  - containerPath: /host
+    hostPath: ./
+    readOnly: true
